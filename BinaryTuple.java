@@ -1,0 +1,31 @@
+/**
+ * Assumes tuple values are integers
+ */
+public class BinaryTuple {
+  private int val1, val2;
+
+  public BinaryTuple(int v1, int v2) {
+    val1 = v1;
+    val2 = v2;
+  }
+
+  public String toString() {
+    return "<" + val1 + ", " + val2 + ">";
+  }
+
+  public boolean matches(int v1, int v2) {
+    return (val1 == v1) && (val2 == v2);
+  }
+
+  public int getVal1() {
+    return val1;
+  }
+
+  public int getVal2() {
+    return val2;
+  }
+
+  public boolean equals(BinaryTuple otherTuple) {
+    return this.val1 == otherTuple.val1 && this.val2 == otherTuple.val2;
+  }
+}

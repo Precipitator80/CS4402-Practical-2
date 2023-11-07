@@ -1,0 +1,82 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPReader",
+            "request": "launch",
+            "mainClass": "BinaryCSPReader",
+            "projectName": "Practical 2_310c49b2"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPMACSolver 4Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPMACSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/4Queens.csp"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPMACSolver 6Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPMACSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/6Queens.csp"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPMACSolver 8Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPMACSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/8Queens.csp"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPMACSolver 10Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPMACSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/10Queens.csp"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPMACSolver Sudoku",
+            "request": "launch",
+            "mainClass": "BinaryCSPMACSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/FinnishSudoku.csp"
+        },
+        {
+            "type": "java",
+            "name": "LangfordsGenerator",
+            "request": "launch",
+            "mainClass": "LangfordsGenerator",
+            "projectName": "Practical 2_310c49b2"
+        },
+        {
+            "type": "java",
+            "name": "QueensGenerator",
+            "request": "launch",
+            "mainClass": "QueensGenerator",
+            "projectName": "Practical 2_310c49b2"
+        },
+        {
+            "type": "java",
+            "name": "SudokuGenerator",
+            "request": "launch",
+            "mainClass": "SudokuGenerator",
+            "projectName": "Practical 2_310c49b2"
+        }
+    ]
+}
