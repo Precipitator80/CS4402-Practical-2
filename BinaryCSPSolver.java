@@ -341,12 +341,14 @@ public abstract class BinaryCSPSolver {
    * Print the solution and increment the solutions counter.
    */
   protected void showSolution() {
+    /*
     StringBuilder stringBuilder = new StringBuilder("Found solution!\n");
     for (Set<Integer> domain : instance.domains) {
       stringBuilder.append(domain.iterator().next());
       stringBuilder.append('\n');
     }
     System.out.println(stringBuilder.toString());
+    */
     solutionsFound++;
   }
 }
