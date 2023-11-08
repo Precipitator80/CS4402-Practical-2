@@ -2,6 +2,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+// Number of solutions for each n: https://oeis.org/A000170 - Accessed 08.11.2023
 public final class QueensGenerator {
   public static void main(String[] args) {
     if (args.length != 1) {

@@ -4,7 +4,7 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
     public static void main(String[] args) {
         // Read in a BinaryCSP instance and initialise the solver.
         if (args.length != 1) {
-            System.out.println("Usage: java BinaryCSPSolver <file.csp>");
+            System.out.println("Usage: java BinaryCSPMACSolver <file.csp>");
             return;
         }
         BinaryCSPReader reader = new BinaryCSPReader();

@@ -19,6 +19,14 @@
         },
         {
             "type": "java",
+            "name": "BinaryCSPFCSolver 4Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPFCSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/4Queens.csp"
+        },
+        {
+            "type": "java",
             "name": "BinaryCSPMACSolver 4Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",

@@ -171,6 +171,11 @@ public abstract class BinaryCSPSolver {
     return selectVarSmallestDomain();
   }
 
+  protected int selectVar(Set<Integer> varSet) {
+    return selectVarAscending(varSet);
+    //return selectVarSmallestDomain();
+  }
+
   /**
    * Selects a non-assigned variable based on ascending order.
    * @return The non-assigned variable with the smallest number.
@@ -183,6 +188,10 @@ public abstract class BinaryCSPSolver {
     }
     System.out.println("Trying to select variable when all are assigned! Returning default 0.");
     return 0;
+  }
+
+  private int selectVarAscending(Set<Integer> varSet) {
+    return varSet.iterator().next();
   }
 
   /**
@@ -341,14 +350,12 @@ public abstract class BinaryCSPSolver {
    * Print the solution and increment the solutions counter.
    */
   protected void showSolution() {
-    /*
     StringBuilder stringBuilder = new StringBuilder("Found solution!\n");
     for (Set<Integer> domain : instance.domains) {
       stringBuilder.append(domain.iterator().next());
       stringBuilder.append('\n');
     }
     System.out.println(stringBuilder.toString());
-    */
     solutionsFound++;
   }
 }
