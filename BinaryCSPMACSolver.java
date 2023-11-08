@@ -46,7 +46,6 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
     private void MAC3() {
         if (completeAssignments()) {
             showSolution(); // After finding a solution, continue searching for further solutions.
-            System.out.println("(Found Solution at start of MAC3!)");
             return;
         }
 
@@ -58,16 +57,14 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
         int val = selectVal(var);
 
         // Assign the variable, removing all other values from its domain.
-        assign(var, val);
+        boolean changed = assign(var, val);
 
         // Check whether all variables have been assigned.
         // If they have, show the solution and stop the algorithm.
         // Else, propagate the changes and run the algorithm again to choose further variables.
         // If no changes were made by AC3 (returns false) after checking for a solution, then a dead end was reached.
         try {
-            if (completeAssignments()) {
-                showSolution(); // After finding a solution, continue searching for further solutions.
-            } else if (macAC3(var)) {
+            if (macAC3(var) || changed) {
                 MAC3();
             }
         } catch (EmptyDomainException e) {
@@ -80,13 +77,13 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
         // If recursion finished, this code is reached.
         // Revert the state and remove the value that was checked from the domain.
         revertState();
-        unassign(var, val);
+        changed = unassign(var, val);
 
         // If the domain is not empty, propagate the domain pruning.
         // If this resulted in changes, run the algorithm again.
         if (!instance.domains.get(var).isEmpty()) {
             try {
-                if (macAC3(var)) {
+                if (macAC3(var) || changed) {
                     MAC3();
                 }
             } catch (EmptyDomainException e) {

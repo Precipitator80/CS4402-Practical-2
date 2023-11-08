@@ -61,18 +61,22 @@ public abstract class BinaryCSPSolver {
    * @param var The variable to assign the value to.
    * @param val The value to assign.
    */
-  protected void assign(int var, int val) {
+  protected boolean assign(int var, int val) {
+    boolean changed = false;
     Iterator<Integer> domainIterator = instance.domains.get(var).iterator();
     while (domainIterator.hasNext()) {
       int otherVal = domainIterator.next();
       if (val != otherVal) {
         domainIterator.remove();
-        pruneDomain(var, otherVal);
+        if (pruneDomain(var, otherVal)) {
+          changed = true;
+        }
       }
     }
     if (DEBUG_MODE) {
       System.out.println("Set var " + var + " = " + val);
     }
+    return changed;
   }
 
   /**
@@ -81,12 +85,13 @@ public abstract class BinaryCSPSolver {
    * @param var The variable to remove the value from.
    * @param val The value to remove.
    */
-  protected void unassign(int var, int val) {
+  protected boolean unassign(int var, int val) {
     //instance.domains.get(var).remove(val);
-    pruneDomain(var, val);
+    boolean changed = pruneDomain(var, val);
     if (DEBUG_MODE) {
       System.out.println("Set var " + var + " != " + val);
     }
+    return changed;
   }
 
   /**
@@ -95,11 +100,11 @@ public abstract class BinaryCSPSolver {
    * @param val The value to remove.
    * @return Whether the value was removed / pruned successfully.
    */
-  private void pruneDomain(int var, int val) {
+  private boolean pruneDomain(int var, int val) {
     //boolean pruned = instance.domains.get(var).remove(val);
     //if (pruned) {
     currentStateChanges().domainPrunes.get(var).add(val);
-    removeInvalidConstraints(var, val);
+    return removeInvalidConstraints(var, val);
     //}
     //return pruned;
   }
@@ -109,7 +114,8 @@ public abstract class BinaryCSPSolver {
    * @param var The variable with the changed domain.
    * @param val The value that was removed from the domain.
    */
-  private void removeInvalidConstraints(int var, int val) {
+  private boolean removeInvalidConstraints(int var, int val) {
+    boolean changed = false;
     for (BinaryConstraint constraint : instance.constraints) {
       if (constraint.containsVar(var)) {
         boolean reverse = constraint.getSecondVar() == var;
@@ -119,10 +125,12 @@ public abstract class BinaryCSPSolver {
           if ((!reverse && tuple.getVal1() == val) || (reverse && tuple.getVal2() == val)) {
             currentStateChanges().addConstraintChange(constraint.getFirstVar(), constraint.getSecondVar(), tuple);
             tupleIterator.remove();
+            changed = true;
           }
         }
       }
     }
+    return changed;
   }
 
   /**
@@ -159,8 +167,8 @@ public abstract class BinaryCSPSolver {
    * @return The variable to make a choice for.
    */
   protected int selectVar() {
-    return selectVarAscending();
-    //return selectVarSmallestDomain();
+    //return selectVarAscending();
+    return selectVarSmallestDomain();
   }
 
   /**
