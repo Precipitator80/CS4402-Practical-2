@@ -36,8 +36,8 @@ public abstract class BinaryCSPSolver {
    * Enter a new state by adding an empty state change to the stack.
    * @return Whether the state was entered successfully.
    */
-  protected boolean enterNewState() {
-    return stateChanges.add(new BinaryCSPStateChange(instance));
+  protected boolean enterNewState(int assignedVar) {
+    return stateChanges.add(new BinaryCSPStateChange(instance, assignedVar));
   }
 
   /**
@@ -62,6 +62,10 @@ public abstract class BinaryCSPSolver {
    * @param val The value to assign.
    */
   protected boolean assign(int var, int val) {
+    // Create a new state.
+    enterNewState(var);
+    instance.varSet.remove(var);
+
     boolean changed = false;
     Iterator<Integer> domainIterator = instance.domains.get(var).iterator();
     while (domainIterator.hasNext()) {
@@ -72,6 +76,7 @@ public abstract class BinaryCSPSolver {
         changed = true;
       }
     }
+
     if (DEBUG_MODE) {
       System.out.println("Set var " + var + " = " + val);
     }
@@ -85,7 +90,7 @@ public abstract class BinaryCSPSolver {
    * @param val The value to remove.
    */
   protected void unassign(int var, int val) {
-    //instance.domains.get(var).remove(val);
+    revertState();
     pruneDomain(var, val);
     if (DEBUG_MODE) {
       System.out.println("Set var " + var + " != " + val);
@@ -162,12 +167,7 @@ public abstract class BinaryCSPSolver {
    * @return The variable to make a choice for.
    */
   protected int selectVar() {
-    //return selectVarAscending();
-    return selectVarSmallestDomain();
-  }
-
-  protected int selectVar(Set<Integer> varSet) {
-    return selectVarAscending(varSet);
+    return selectVarAscending();
     //return selectVarSmallestDomain();
   }
 
@@ -176,17 +176,11 @@ public abstract class BinaryCSPSolver {
    * @return The non-assigned variable with the smallest number.
    */
   private int selectVarAscending() {
-    for (int var = 0; var < instance.getNoVariables(); var++) {
-      if (instance.domains.get(var).size() > 1) {
-        return var;
-      }
+    if (!instance.varSet.isEmpty()) {
+      return instance.varSet.iterator().next();
     }
     System.out.println("Trying to select variable when all are assigned! Returning default 0.");
     return 0;
-  }
-
-  private int selectVarAscending(Set<Integer> varSet) {
-    return varSet.iterator().next();
   }
 
   /**
@@ -196,7 +190,7 @@ public abstract class BinaryCSPSolver {
   private int selectVarSmallestDomain() {
     int smallestDomainVar = -1;
     int smallestDomainSize = Integer.MAX_VALUE;
-    for (int var = 0; var < instance.domains.size(); var++) {
+    for (int var : instance.varSet) {
       int domainSize = instance.domains.get(var).size();
       if (domainSize > 1 && domainSize < smallestDomainSize) {
         smallestDomainVar = var;
@@ -226,17 +220,20 @@ public abstract class BinaryCSPSolver {
    * @return Whether all variables have assignments.
    */
   protected boolean completeAssignments() {
+    return instance.varSet.isEmpty();
+    /*
     boolean completedAssignments = true;
     for (int var = 0; var < instance.domains.size() && completedAssignments; var++) {
       completedAssignments = instance.domains.get(var).size() == 1;
     }
     return completedAssignments;
+    */
   }
 
   /**
-   * Gets all the arcs of the instance's graph of variables (nodes) and constraints (edges).
-   * @return A queue of all arcs in the instance's graph.
-   */
+  * Gets all the arcs of the instance's graph of variables (nodes) and constraints (edges).
+  * @return A queue of all arcs in the instance's graph.
+  */
   protected Queue<Arc> getArcs() {
     Queue<Arc> queue = new LinkedList<Arc>();
     for (BinaryConstraint constraint : instance.constraints) {

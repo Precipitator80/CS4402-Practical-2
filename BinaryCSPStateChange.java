@@ -6,8 +6,11 @@ import java.util.Set;
 public class BinaryCSPStateChange {
     public List<Set<Integer>> domainPrunes;
     private List<BinaryConstraint> constraintChanges;
+    public int assignedVar;
 
-    public BinaryCSPStateChange(BinaryCSP instance) {
+    public BinaryCSPStateChange(BinaryCSP instance, int assignedVar) {
+        this.assignedVar = assignedVar;
+
         domainPrunes = new ArrayList<Set<Integer>>();
         for (int var = 0; var < instance.getNoVariables(); var++) {
             domainPrunes.add(new HashSet<Integer>());
@@ -32,6 +35,8 @@ public class BinaryCSPStateChange {
                 }
             }
         }
+
+        instance.varSet.add(assignedVar);
     }
 
     public boolean addConstraintChange(int var1, int var2, BinaryTuple removedTuple) {

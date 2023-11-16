@@ -21,7 +21,9 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
 
     @Override
     void solve() {
-        enterNewState();
+        // Create a starting state.
+        enterNewState(-1);
+
         // Ensure global arc consistency at the start.
         try {
             macAC3();
@@ -49,24 +51,20 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
             return;
         }
 
-        // Create a new state.
-        enterNewState();
-
         // Select a variable and value to assign.
         int var = selectVar();
         int val = selectVal(var);
 
         // Assign the variable, removing all other values from its domain.
-        boolean changed = assign(var, val);
+        assign(var, val);
 
         // Check whether all variables have been assigned.
         // If they have, show the solution and stop the algorithm.
         // Else, propagate the changes and run the algorithm again to choose further variables.
         // If no changes were made by AC3 (returns false) after checking for a solution, then a dead end was reached.
         try {
-            if (macAC3(var) || changed) {
-                MAC3();
-            }
+            macAC3(var);
+            MAC3();
         } catch (EmptyDomainException e) {
             // Exception to let AC3 cancel early in the case of a domain wipeout.
             if (DEBUG_MODE) {
@@ -76,7 +74,6 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
 
         // If recursion finished, this code is reached.
         // Revert the state and remove the value that was checked from the domain.
-        revertState();
         unassign(var, val);
 
         // If the domain is not empty, propagate the domain pruning.
