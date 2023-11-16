@@ -1,4 +1,7 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Queue;
+import java.util.Timer;
 
 public class BinaryCSPMACSolver extends BinaryCSPSolver {
     public BinaryCSPMACSolver(BinaryCSP instance) {
@@ -22,6 +25,7 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
     void solve() {
         // Create a starting state.
         enterNewState(-1);
+        Instant start = Instant.now();
 
         // Ensure global arc consistency at the start.
         try {
@@ -34,7 +38,10 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
         // Run the MAC3 search algorithm.
         MAC3();
 
-        printResults();
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toMillis();
+        printInfo();
+        System.out.println("Time taken: " + timeElapsed + "ms");
     }
 
     /**

@@ -18,8 +18,10 @@ public abstract class BinaryCSPSolver {
   // The instance to solve.
   BinaryCSP instance;
 
-  // The number of solutions found.
-  int solutionsFound = 0;
+  // Variables to log solver data.
+  int solutionsFound = 0; // The number of solutions found.
+  int nodesExplored = 0; // The number of nodes explored.
+  int revisionsDone = 0; // The number of arc revisions done.
 
   // Flag to print out solver logic.
   final boolean DEBUG_MODE = false;
@@ -69,6 +71,7 @@ public abstract class BinaryCSPSolver {
   protected boolean assign(int var, int val) {
     // Create a new state.
     enterNewState(var);
+    nodesExplored++;
     instance.varSet.remove(var);
 
     boolean changed = false;
@@ -100,6 +103,7 @@ public abstract class BinaryCSPSolver {
    */
   protected void unassign(int var, int val) throws EmptyDomainException {
     revertState();
+    nodesExplored++;
     pruneDomain(var, val);
     if (DEBUG_MODE) {
       System.out.println("Set var " + var + " != " + val);
@@ -306,6 +310,7 @@ public abstract class BinaryCSPSolver {
   protected boolean revise(Arc arc) throws EmptyDomainException {
     // Boolean value to track whether the domain was changed.
     boolean changed = false;
+    revisionsDone++;
     // Try to find the constraint that matches the arc.
     for (BinaryConstraint binaryConstraint : instance.constraints) {
       if (binaryConstraint.matches(arc)) {
@@ -363,11 +368,13 @@ public abstract class BinaryCSPSolver {
     solutionsFound++;
   }
 
-  protected void printResults() {
+  protected void printInfo() {
     if (solutionsFound == 0) {
       System.out.println("Failed to find a solution!");
     } else {
       System.out.println("Found " + solutionsFound + " solutions!");
     }
+    System.out.println("Explored " + nodesExplored + " nodes!");
+    System.out.println("Performed " + revisionsDone + " arc revisions!");
   }
 }

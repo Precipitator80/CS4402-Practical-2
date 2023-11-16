@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +25,14 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
     void solve() {
         // Create a starting state.
         enterNewState(-1);
+        Instant start = Instant.now();
 
         forwardChecking();
 
-        printResults();
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toMillis();
+        printInfo();
+        System.out.println("Time taken: " + timeElapsed + "ms");
     }
 
     /*
