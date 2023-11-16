@@ -27,6 +27,38 @@
         },
         {
             "type": "java",
+            "name": "BinaryCSPFCSolver 5Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPFCSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/5Queens.csp"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPFCSolver 6Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPFCSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/6Queens.csp"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPFCSolver 8Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPFCSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/8Queens.csp"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPFCSolver 10Queens",
+            "request": "launch",
+            "mainClass": "BinaryCSPFCSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/10Queens.csp"
+        },
+        {
+            "type": "java",
             "name": "BinaryCSPMACSolver 4Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",

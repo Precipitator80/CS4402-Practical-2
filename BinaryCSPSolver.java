@@ -68,9 +68,8 @@ public abstract class BinaryCSPSolver {
       int otherVal = domainIterator.next();
       if (val != otherVal) {
         domainIterator.remove();
-        if (pruneDomain(var, otherVal)) {
-          changed = true;
-        }
+        pruneDomain(var, otherVal);
+        changed = true;
       }
     }
     if (DEBUG_MODE) {
@@ -85,13 +84,12 @@ public abstract class BinaryCSPSolver {
    * @param var The variable to remove the value from.
    * @param val The value to remove.
    */
-  protected boolean unassign(int var, int val) {
+  protected void unassign(int var, int val) {
     //instance.domains.get(var).remove(val);
-    boolean changed = pruneDomain(var, val);
+    pruneDomain(var, val);
     if (DEBUG_MODE) {
       System.out.println("Set var " + var + " != " + val);
     }
-    return changed;
   }
 
   /**
@@ -100,13 +98,10 @@ public abstract class BinaryCSPSolver {
    * @param val The value to remove.
    * @return Whether the value was removed / pruned successfully.
    */
-  private boolean pruneDomain(int var, int val) {
-    //boolean pruned = instance.domains.get(var).remove(val);
-    //if (pruned) {
+  private void pruneDomain(int var, int val) {
+    instance.domains.get(var).remove(val);
     currentStateChanges().domainPrunes.get(var).add(val);
-    return removeInvalidConstraints(var, val);
-    //}
-    //return pruned;
+    removeInvalidConstraints(var, val);
   }
 
   /**

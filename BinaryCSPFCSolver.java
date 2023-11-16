@@ -51,8 +51,18 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
      * Do you also need to check node consistency somewhere?
      */
 
+    /**
+     * Forward Checking:
+     * Make a choice.
+     * Propagate the choice.
+     * If the choice was successful, make another choice.
+     * If the choice was not successful, undo the changes and make the other choice.
+     * Propagate the choice.
+     * If neither worked, undo the single change and undo a previous choice.
+     * @param varSet
+     */
     private void forwardChecking(Set<Integer> varSet) {
-        if (completeAssignments()) {
+        if (varSet.isEmpty()) {
             showSolution(); // After finding a solution, continue searching for further solutions.
             return;
         }
@@ -64,39 +74,39 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
             // Select a variable and value to assign.
             int var = selectVar(varSet);
             int val = selectVal(var);
+            // Make a guess.
             forwardCheckingLeftBranch(varSet, var, val);
+
+            // If the guess failed, guess the opposite.
             forwardCheckingRightBranch(varSet, var, val);
         }
     }
 
     private void forwardCheckingLeftBranch(Set<Integer> varSet, int var, int val) {
         // Assign the variable, removing all other values from its domain.
-        boolean changed = assign(var, val);
+        assign(var, val);
 
         try {
-            if (reviseFutureArcs(var, val) || changed) {
-                Set<Integer> truncatedVarSet = new LinkedHashSet<Integer>(varSet);
-                truncatedVarSet.remove(var);
-                forwardChecking(truncatedVarSet);
-            }
+            // Revise all future arcs to enforce local arc consistency.
+            reviseFutureArcs(varSet, var);
+            Set<Integer> truncatedVarSet = new LinkedHashSet<Integer>(varSet);
+            truncatedVarSet.remove(var);
+            forwardChecking(truncatedVarSet);
         } catch (EmptyDomainException e) {
             // Exception to let revision cancel early in the case of a domain wipeout.
             if (DEBUG_MODE) {
                 System.out.println(e.toString() + " (FC Left Branch)");
             }
         }
+        revertState();
     }
 
     private void forwardCheckingRightBranch(Set<Integer> varSet, int var, int val) {
-        revertState();
-        boolean changed = unassign(var, val);
+        unassign(var, val);
         if (!instance.domains.get(var).isEmpty()) {
             try {
-                if (reviseFutureArcs(var, val) || changed) {
-                    Set<Integer> truncatedVarSet = new LinkedHashSet<Integer>(varSet);
-                    truncatedVarSet.remove(var);
-                    forwardChecking(truncatedVarSet);
-                }
+                reviseFutureArcs(varSet, var);
+                forwardChecking(varSet);
             } catch (EmptyDomainException e) {
                 // Exception to let revision cancel early in the case of a domain wipeout.
                 if (DEBUG_MODE) {
@@ -107,19 +117,17 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
         restoreDomain(var, val);
     }
 
-    private boolean reviseFutureArcs(int var, int val) throws EmptyDomainException {
-        boolean consistent = true;
-        List<Arc> arcs = getFutureArcs(var);
-        for (int i = 0; i < arcs.size() && consistent; i++) {
-            consistent = revise(arcs.get(i));
+    private void reviseFutureArcs(Set<Integer> varSet, int currentVar) throws EmptyDomainException {
+        List<Arc> arcs = getFutureArcs(varSet, currentVar);
+        for (Arc arc : arcs) {
+            revise(arc);
         }
-        return consistent;
     }
 
-    private List<Arc> getFutureArcs(int currentVar) {
+    private List<Arc> getFutureArcs(Set<Integer> varSet, int currentVar) {
         List<Arc> arcs = new ArrayList<Arc>();
-        for (int futureVar = 0; futureVar < instance.domains.size(); futureVar++) {
-            if (futureVar != currentVar && instance.domains.get(futureVar).size() > 1) {
+        for (int futureVar : varSet) {
+            if (futureVar != currentVar) {
                 arcs.add(new Arc(futureVar, currentVar));
             }
         }

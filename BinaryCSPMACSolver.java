@@ -77,15 +77,14 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
         // If recursion finished, this code is reached.
         // Revert the state and remove the value that was checked from the domain.
         revertState();
-        changed = unassign(var, val);
+        unassign(var, val);
 
         // If the domain is not empty, propagate the domain pruning.
         // If this resulted in changes, run the algorithm again.
         if (!instance.domains.get(var).isEmpty()) {
             try {
-                if (macAC3(var) || changed) {
-                    MAC3();
-                }
+                macAC3(var);
+                MAC3();
             } catch (EmptyDomainException e) {
                 // Exception to let AC3 cancel early in the case of a domain wipeout.
                 if (DEBUG_MODE) {
