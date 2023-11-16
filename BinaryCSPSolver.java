@@ -1,6 +1,10 @@
 import java.util.*;
 
 public abstract class BinaryCSPSolver {
+  protected BinaryCSPSolver(String instanceFilePath) {
+    this(new BinaryCSPReader().readBinaryCSP(instanceFilePath));
+  }
+
   protected BinaryCSPSolver(BinaryCSP instance) {
     this.instance = instance;
     stateChanges = new Stack<BinaryCSPStateChange>();
@@ -17,6 +21,7 @@ public abstract class BinaryCSPSolver {
   // The number of solutions found.
   int solutionsFound = 0;
 
+  // Flag to print out solver logic.
   final boolean DEBUG_MODE = false;
 
   // A states stack for each depth of search.
@@ -72,7 +77,11 @@ public abstract class BinaryCSPSolver {
       int otherVal = domainIterator.next();
       if (val != otherVal) {
         domainIterator.remove();
-        pruneDomain(var, otherVal);
+        try {
+          pruneDomain(var, otherVal);
+        } catch (EmptyDomainException e) {
+          System.err.println("Domain wipeout while assigning a variable! There is likely an error in the code.");
+        }
         changed = true;
       }
     }
@@ -89,7 +98,7 @@ public abstract class BinaryCSPSolver {
    * @param var The variable to remove the value from.
    * @param val The value to remove.
    */
-  protected void unassign(int var, int val) {
+  protected void unassign(int var, int val) throws EmptyDomainException {
     revertState();
     pruneDomain(var, val);
     if (DEBUG_MODE) {
@@ -103,9 +112,12 @@ public abstract class BinaryCSPSolver {
    * @param val The value to remove.
    * @return Whether the value was removed / pruned successfully.
    */
-  private void pruneDomain(int var, int val) {
+  private void pruneDomain(int var, int val) throws EmptyDomainException {
     instance.domains.get(var).remove(val);
     currentStateChanges().domainPrunes.get(var).add(val);
+    if (instance.domains.get(var).isEmpty()) {
+      throw new EmptyDomainException("Domain wipeout when pruning domain!");
+    }
     removeInvalidConstraints(var, val);
   }
 
@@ -167,8 +179,8 @@ public abstract class BinaryCSPSolver {
    * @return The variable to make a choice for.
    */
   protected int selectVar() {
-    return selectVarAscending();
-    //return selectVarSmallestDomain();
+    //return selectVarAscending();
+    return selectVarSmallestDomain();
   }
 
   /**
@@ -192,7 +204,7 @@ public abstract class BinaryCSPSolver {
     int smallestDomainSize = Integer.MAX_VALUE;
     for (int var : instance.varSet) {
       int domainSize = instance.domains.get(var).size();
-      if (domainSize > 1 && domainSize < smallestDomainSize) {
+      if (domainSize < smallestDomainSize) {
         smallestDomainVar = var;
         smallestDomainSize = instance.domains.get(smallestDomainVar).size();
       }
@@ -322,7 +334,7 @@ public abstract class BinaryCSPSolver {
 
             // Check whether the domain is empty.
             if (instance.domains.get(arc.getVal1()).isEmpty()) {
-              throw new EmptyDomainException("Domain wipeout!");
+              throw new EmptyDomainException("Domain wipeout when revising arcs!");
             }
           }
         }
@@ -349,5 +361,13 @@ public abstract class BinaryCSPSolver {
     }
     System.out.println(stringBuilder.toString());
     solutionsFound++;
+  }
+
+  protected void printResults() {
+    if (solutionsFound == 0) {
+      System.out.println("Failed to find a solution!");
+    } else {
+      System.out.println("Found " + solutionsFound + " solutions!");
+    }
   }
 }

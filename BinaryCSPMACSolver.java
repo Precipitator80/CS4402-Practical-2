@@ -1,22 +1,21 @@
 import java.util.Queue;
 
 public class BinaryCSPMACSolver extends BinaryCSPSolver {
+    public BinaryCSPMACSolver(BinaryCSP instance) {
+        super(instance);
+    }
+
+    public BinaryCSPMACSolver(String instanceFilePath) {
+        super(instanceFilePath);
+    }
+
     public static void main(String[] args) {
-        // Read in a BinaryCSP instance and initialise the solver.
+        // Read in a BinaryCSP instance to initialise and start the solver.
         if (args.length != 1) {
             System.out.println("Usage: java BinaryCSPMACSolver <file.csp>");
             return;
         }
-        BinaryCSPReader reader = new BinaryCSPReader();
-        BinaryCSP instance = reader.readBinaryCSP(args[0]);
-        BinaryCSPSolver macSolver = new BinaryCSPMACSolver(instance);
-
-        // Solve the BinaryCSP instance.
-        macSolver.solve();
-    }
-
-    public BinaryCSPMACSolver(BinaryCSP instance) {
-        super(instance);
+        new BinaryCSPMACSolver(args[0]).solve();
     }
 
     @Override
@@ -35,11 +34,7 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
         // Run the MAC3 search algorithm.
         MAC3();
 
-        if (solutionsFound == 0) {
-            System.out.println("Failed to find a solution!");
-        } else {
-            System.out.println("Found " + solutionsFound + " solutions!");
-        }
+        printResults();
     }
 
     /**
@@ -56,14 +51,15 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
         int val = selectVal(var);
 
         // Assign the variable, removing all other values from its domain.
-        assign(var, val);
+        boolean changed = assign(var, val);
 
-        // Check whether all variables have been assigned.
-        // If they have, show the solution and stop the algorithm.
-        // Else, propagate the changes and run the algorithm again to choose further variables.
-        // If no changes were made by AC3 (returns false) after checking for a solution, then a dead end was reached.
         try {
-            macAC3(var);
+            // If any values were removed, propagate the changes.
+            if (changed) {
+                macAC3(var);
+            }
+
+            // If no domains were wiped out by the changes, run the algorithm again to choose further variables.
             MAC3();
         } catch (EmptyDomainException e) {
             // Exception to let AC3 cancel early in the case of a domain wipeout.
@@ -74,22 +70,20 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
 
         // If recursion finished, this code is reached.
         // Revert the state and remove the value that was checked from the domain.
-        unassign(var, val);
 
         // If the domain is not empty, propagate the domain pruning.
         // If this resulted in changes, run the algorithm again.
-        if (!instance.domains.get(var).isEmpty()) {
-            try {
-                macAC3(var);
-                MAC3();
-            } catch (EmptyDomainException e) {
-                // Exception to let AC3 cancel early in the case of a domain wipeout.
-                if (DEBUG_MODE) {
-                    System.out.println(e.toString() + " (2)");
-                }
+        try {
+            unassign(var, val);
+            macAC3(var);
+            MAC3();
+        } catch (EmptyDomainException e) {
+            // Exception to let AC3 cancel early in the case of a domain wipeout.
+            if (DEBUG_MODE) {
+                System.out.println(e.toString() + " (2)");
             }
-            //System.out.println("Finished exploring tree (1).");
         }
+        //System.out.println("Finished exploring tree (1).");
         //System.out.println("Finished exploring tree (2).");
         restoreDomain(var, val);
     }

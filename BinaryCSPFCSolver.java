@@ -2,22 +2,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BinaryCSPFCSolver extends BinaryCSPSolver {
+    public BinaryCSPFCSolver(String instanceFilePath) {
+        super(instanceFilePath);
+    }
+
     public BinaryCSPFCSolver(BinaryCSP instance) {
         super(instance);
     }
 
     public static void main(String[] args) {
-        // Read in a BinaryCSP instance and initialise the solver.
+        // Read in a BinaryCSP instance to initialise and start the solver.
         if (args.length != 1) {
             System.out.println("Usage: java BinaryFCCSPSolver <file.csp>");
             return;
         }
-        BinaryCSPReader reader = new BinaryCSPReader();
-        BinaryCSP instance = reader.readBinaryCSP(args[0]);
-        BinaryCSPSolver fcSolver = new BinaryCSPFCSolver(instance);
-
-        // Solve the BinaryCSP instance.
-        fcSolver.solve();
+        new BinaryCSPFCSolver(args[0]).solve();
     }
 
     @Override
@@ -27,11 +26,7 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
 
         forwardChecking();
 
-        if (solutionsFound == 0) {
-            System.out.println("Failed to find a solution!");
-        } else {
-            System.out.println("Found " + solutionsFound + " solutions!");
-        }
+        printResults();
     }
 
     /*
@@ -80,8 +75,10 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
         assign(var, val);
 
         try {
-            // Revise all future arcs to enforce local arc consistency.
+            // Revise all future arcs targeting this variable in order to enforce local arc consistency.
             reviseFutureArcs(var);
+
+            // Choose the next variable.
             forwardChecking();
         } catch (EmptyDomainException e) {
             // Exception to let revision cancel early in the case of a domain wipeout.
@@ -92,16 +89,14 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
     }
 
     private void forwardCheckingRightBranch(int var, int val) {
-        unassign(var, val);
-        if (!instance.domains.get(var).isEmpty()) {
-            try {
-                reviseFutureArcs(var);
-                forwardChecking();
-            } catch (EmptyDomainException e) {
-                // Exception to let revision cancel early in the case of a domain wipeout.
-                if (DEBUG_MODE) {
-                    System.out.println(e.toString() + " (FC Right Branch)");
-                }
+        try {
+            unassign(var, val);
+            reviseFutureArcs(var);
+            forwardChecking();
+        } catch (EmptyDomainException e) {
+            // Exception to let revision cancel early in the case of a domain wipeout.
+            if (DEBUG_MODE) {
+                System.out.println(e.toString() + " (FC Right Branch)");
             }
         }
         restoreDomain(var, val);
