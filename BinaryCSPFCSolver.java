@@ -40,7 +40,7 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
             }
         } catch (Exception e) {
             System.out.println(
-                    "Usage: java BinaryCSPFCSolver <file.csp> [solutionsToFind] [varSelectMode] [valSelectMode]");
+                    "Usage: java BinaryCSPFCSolver <file.csp> [solutionsToFind] [varSelectMode] [valSelectMode] [debugMode]");
         }
     }
 
