@@ -1,13 +1,30 @@
 import java.util.*;
 
 public abstract class BinaryCSPSolver {
-  protected BinaryCSPSolver(String instanceFilePath) {
-    this(new BinaryCSPReader().readBinaryCSP(instanceFilePath));
+  public BinaryCSPSolver(String instanceFilePath, int solutionsToFind, int varSelectMode, int valSelectMode,
+      boolean debugMode) {
+    this(new BinaryCSPReader().readBinaryCSP(instanceFilePath), solutionsToFind, varSelectMode, valSelectMode,
+        debugMode);
   }
 
-  protected BinaryCSPSolver(BinaryCSP instance) {
+  public BinaryCSPSolver(BinaryCSP instance, int solutionsToFind, int varSelectMode, int valSelectMode,
+      boolean debugMode) {
     this.instance = instance;
-    stateChanges = new Stack<BinaryCSPStateChange>();
+    this.solutionsToFind = solutionsToFind;
+    this.varSelectMode = VarSelectMode.values()[varSelectMode];
+    this.valSelectMode = ValSelectMode.values()[valSelectMode];
+    this.DEBUG_MODE = debugMode;
+    this.stateChanges = new Stack<BinaryCSPStateChange>();
+  }
+
+  enum VarSelectMode {
+    ASCENDING,
+    SMALLEST_DOMAIN
+  }
+
+  enum ValSelectMode {
+    ASCENDING,
+    MIN_CONFLICTS
   }
 
   /**
@@ -18,13 +35,20 @@ public abstract class BinaryCSPSolver {
   // The instance to solve.
   BinaryCSP instance;
 
+  // The number of solutions the solver should find. 0 = All solutions.
+  int solutionsToFind;
+
+  // Settings for how the solver should select variables and values.
+  VarSelectMode varSelectMode;
+  ValSelectMode valSelectMode;
+
   // Variables to log solver data.
   int solutionsFound = 0; // The number of solutions found.
   int nodesExplored = 0; // The number of nodes explored.
   int revisionsDone = 0; // The number of arc revisions done.
 
   // Flag to print out solver logic.
-  final boolean DEBUG_MODE = false;
+  final boolean DEBUG_MODE;
 
   // A states stack for each depth of search.
   // Each state has a list of variable domains.
@@ -72,7 +96,7 @@ public abstract class BinaryCSPSolver {
     // Create a new state.
     enterNewState(var);
     nodesExplored++;
-    instance.varSet.remove(var);
+    instance.varList.remove((Object) var);
 
     boolean changed = false;
     Iterator<Integer> domainIterator = instance.domains.get(var).iterator();
@@ -183,8 +207,12 @@ public abstract class BinaryCSPSolver {
    * @return The variable to make a choice for.
    */
   protected int selectVar() {
-    //return selectVarAscending();
-    return selectVarSmallestDomain();
+    switch (varSelectMode) {
+      case SMALLEST_DOMAIN:
+        return selectVarSmallestDomain();
+      default:
+        return selectVarAscending();
+    }
   }
 
   /**
@@ -192,8 +220,8 @@ public abstract class BinaryCSPSolver {
    * @return The non-assigned variable with the smallest number.
    */
   private int selectVarAscending() {
-    if (!instance.varSet.isEmpty()) {
-      return instance.varSet.iterator().next();
+    if (!instance.varList.isEmpty()) {
+      return instance.varList.get(0);
     }
     System.out.println("Trying to select variable when all are assigned! Returning default 0.");
     return 0;
@@ -206,7 +234,7 @@ public abstract class BinaryCSPSolver {
   private int selectVarSmallestDomain() {
     int smallestDomainVar = -1;
     int smallestDomainSize = Integer.MAX_VALUE;
-    for (int var : instance.varSet) {
+    for (int var : instance.varList) {
       int domainSize = instance.domains.get(var).size();
       if (domainSize < smallestDomainSize) {
         smallestDomainVar = var;
@@ -221,14 +249,51 @@ public abstract class BinaryCSPSolver {
   }
 
   /**
-   * Select the first value in the domain of a given variable.
+   * Selects a value in the domain of a given variable.
    * Throws an exception if the domain is empty.
    * @param var The variable with the domain to get a value from.
    * @return The first value in the domain of the variable.
    */
   protected int selectVal(int var) {
-    Set<Integer> domain = instance.domains.get(var);
-    return domain.iterator().next();
+    switch (valSelectMode) {
+      case MIN_CONFLICTS:
+        return selectValMinConflicts(var).valAssigned;
+      default:
+        return selectValAscending(var);
+    }
+  }
+
+  /**
+   * Select the first value in the domain of a given variable.
+   * Throws an exception if the domain is empty.
+   * @param var The variable with the domain to get a value from.
+   * @return The first value in the domain of the variable.
+   */
+  private int selectValAscending(int var) {
+    return instance.domains.get(var).iterator().next();
+  }
+
+  /** TODO If using a Geelen promise / heuristic / etc, do value choosing and assigning in one step to avoid searching for lost constraints twice. */
+  private GeelenPair selectValMinConflicts(int var) {
+    GeelenPair minGeelenPair = null;
+    int minLost = Integer.MAX_VALUE;
+    for (GeelenPair potentialGeelenPair : getGeelenPairs(var)) {
+      if (potentialGeelenPair.lostSize() < minLost) {
+        minGeelenPair = potentialGeelenPair;
+        minLost = potentialGeelenPair.lostSize();
+      }
+    }
+    return minGeelenPair;
+  }
+
+  private Set<GeelenPair> getGeelenPairs(int var) {
+    Set<GeelenPair> geelenPairs = new LinkedHashSet<GeelenPair>();
+    Iterator<Integer> domainIterator = instance.domains.get(var).iterator();
+    while (domainIterator.hasNext()) {
+      int val = domainIterator.next();
+      geelenPairs.add(new GeelenPair(instance, var, val));
+    }
+    return geelenPairs;
   }
 
   /**
@@ -236,7 +301,7 @@ public abstract class BinaryCSPSolver {
    * @return Whether all variables have assignments.
    */
   protected boolean completeAssignments() {
-    return instance.varSet.isEmpty();
+    return instance.varList.isEmpty();
     /*
     boolean completedAssignments = true;
     for (int var = 0; var < instance.domains.size() && completedAssignments; var++) {
@@ -244,6 +309,10 @@ public abstract class BinaryCSPSolver {
     }
     return completedAssignments;
     */
+  }
+
+  protected boolean stopSearching() {
+    return solutionsToFind > 0 && solutionsFound >= solutionsToFind;
   }
 
   /**
@@ -346,11 +415,6 @@ public abstract class BinaryCSPSolver {
         // Do not look for any further constraints as there should only be one matching one.
         break;
       }
-    }
-    if (changed && instance.domains.get(arc.getVal1()).size() == 1 && DEBUG_MODE) {
-      System.out
-          .println("Set var " + arc.getVal1() + " = " + instance.domains.get(arc.getVal1()).iterator().next()
-              + " (Implicit)");
     }
     return changed;
   }

@@ -36,7 +36,7 @@ public class BinaryCSPStateChange {
             }
         }
 
-        instance.varSet.add(assignedVar);
+        instance.varList.add(0, assignedVar);
     }
 
     public boolean addConstraintChange(int var1, int var2, BinaryTuple removedTuple) {

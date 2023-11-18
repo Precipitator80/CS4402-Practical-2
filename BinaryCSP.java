@@ -2,21 +2,21 @@ import java.util.*;
 
 public final class BinaryCSP {
   private int[][] domainBounds;
-  public ArrayList<BinaryConstraint> constraints;
-  public ArrayList<Set<Integer>> domains;
+  public List<BinaryConstraint> constraints;
+  public List<SortedSet<Integer>> domains;
   // Variables left to assign.
-  Set<Integer> varSet;
+  List<Integer> varList;
 
-  public BinaryCSP(int[][] db, ArrayList<BinaryConstraint> c) {
+  public BinaryCSP(int[][] db, List<BinaryConstraint> c) {
     domainBounds = db;
     constraints = c;
 
     // Create domains for the variables based on their bounds.
-    domains = new ArrayList<Set<Integer>>();
-    varSet = new LinkedHashSet<Integer>();
+    domains = new ArrayList<SortedSet<Integer>>();
+    varList = new LinkedList<Integer>();
     for (int varIndex = 0; varIndex < getNoVariables(); varIndex++) {
-      varSet.add(varIndex);
-      Set<Integer> domain = new LinkedHashSet<Integer>();
+      varList.add(varIndex);
+      SortedSet<Integer> domain = new TreeSet<Integer>();
       for (int val = getLB(varIndex); val <= getUB(varIndex); val++) {
         domain.add(val);
       }

@@ -1,24 +1,46 @@
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Queue;
-import java.util.Timer;
 
 public class BinaryCSPMACSolver extends BinaryCSPSolver {
-    public BinaryCSPMACSolver(BinaryCSP instance) {
-        super(instance);
+    public BinaryCSPMACSolver(String instanceFilePath, int solutionsToFind, int varSelectMode, int valSelectMode,
+            boolean debugMode) {
+        super(instanceFilePath, solutionsToFind, varSelectMode, valSelectMode, debugMode);
     }
 
-    public BinaryCSPMACSolver(String instanceFilePath) {
-        super(instanceFilePath);
+    public BinaryCSPMACSolver(BinaryCSP instance, int solutionsToFind, int varSelectMode, int valSelectMode,
+            boolean debugMode) {
+        super(instance, solutionsToFind, varSelectMode, valSelectMode, debugMode);
     }
 
     public static void main(String[] args) {
-        // Read in a BinaryCSP instance to initialise and start the solver.
-        if (args.length != 1) {
-            System.out.println("Usage: java BinaryCSPMACSolver <file.csp>");
-            return;
+        try {
+            if (args.length > 0) {
+                String instanceFilePath = args[0];
+                int solutionsToFind = 0;
+                int varSelectMode = 0;
+                int valSelectMode = 0;
+                boolean debugMode = false;
+                if (args.length > 1) {
+                    solutionsToFind = Integer.parseInt(args[1]);
+                    if (args.length > 2) {
+                        varSelectMode = Integer.parseInt(args[2]);
+                        if (args.length > 3) {
+                            valSelectMode = Integer.parseInt(args[3]);
+                            if (args.length > 4) {
+                                debugMode = Boolean.parseBoolean(args[4]);
+                            }
+                        }
+                    }
+                }
+
+                new BinaryCSPMACSolver(instanceFilePath, solutionsToFind, varSelectMode, valSelectMode, debugMode)
+                        .solve();
+            }
+        } catch (Exception e) {
+            System.out.println(
+                    "Usage: java BinaryCSPMACSolver <file.csp> [solutionsToFind] [varSelectMode] [valSelectMode]");
         }
-        new BinaryCSPMACSolver(args[0]).solve();
     }
 
     @Override
@@ -60,6 +82,8 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
         // Assign the variable, removing all other values from its domain.
         boolean changed = assign(var, val);
 
+        // TODO Have geelen selectValAndAssign method.
+
         try {
             // If any values were removed, propagate the changes.
             if (changed) {
@@ -73,6 +97,10 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
             if (DEBUG_MODE) {
                 System.out.println(e.toString() + " (1)");
             }
+        }
+
+        if (stopSearching()) {
+            return;
         }
 
         // If recursion finished, this code is reached.
@@ -90,6 +118,11 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
                 System.out.println(e.toString() + " (2)");
             }
         }
+
+        if (stopSearching()) {
+            return;
+        }
+
         //System.out.println("Finished exploring tree (1).");
         //System.out.println("Finished exploring tree (2).");
         restoreDomain(var, val);

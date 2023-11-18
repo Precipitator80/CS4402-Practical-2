@@ -4,21 +4,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BinaryCSPFCSolver extends BinaryCSPSolver {
-    public BinaryCSPFCSolver(String instanceFilePath) {
-        super(instanceFilePath);
+    public BinaryCSPFCSolver(String instanceFilePath, int solutionsToFind, int varSelectMode, int valSelectMode,
+            boolean debugMode) {
+        super(instanceFilePath, solutionsToFind, varSelectMode, valSelectMode, debugMode);
     }
 
-    public BinaryCSPFCSolver(BinaryCSP instance) {
-        super(instance);
+    public BinaryCSPFCSolver(BinaryCSP instance, int solutionsToFind, int varSelectMode, int valSelectMode,
+            boolean debugMode) {
+        super(instance, solutionsToFind, varSelectMode, valSelectMode, debugMode);
     }
 
     public static void main(String[] args) {
-        // Read in a BinaryCSP instance to initialise and start the solver.
-        if (args.length != 1) {
-            System.out.println("Usage: java BinaryFCCSPSolver <file.csp>");
-            return;
+        try {
+            if (args.length > 0) {
+                String instanceFilePath = args[0];
+                int solutionsToFind = 0;
+                int varSelectMode = 0;
+                int valSelectMode = 0;
+                boolean debugMode = false;
+                if (args.length > 1) {
+                    solutionsToFind = Integer.parseInt(args[1]);
+                    if (args.length > 2) {
+                        varSelectMode = Integer.parseInt(args[2]);
+                        if (args.length > 3) {
+                            valSelectMode = Integer.parseInt(args[3]);
+                            if (args.length > 4) {
+                                debugMode = Boolean.parseBoolean(args[4]);
+                            }
+                        }
+                    }
+                }
+
+                new BinaryCSPFCSolver(instanceFilePath, solutionsToFind, varSelectMode, valSelectMode, debugMode)
+                        .solve();
+            }
+        } catch (Exception e) {
+            System.out.println(
+                    "Usage: java BinaryCSPFCSolver <file.csp> [solutionsToFind] [varSelectMode] [valSelectMode]");
         }
-        new BinaryCSPFCSolver(args[0]).solve();
     }
 
     @Override
@@ -53,7 +76,7 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
      * If the choice was not successful, undo the changes and make the other choice.
      * Propagate the choice.
      * If neither worked, undo the single change and undo a previous choice.
-     * @param varSet
+     * @param varList
      */
     private void forwardChecking() {
         // Cannot use the same completed assignments because consistency has to be checked.
@@ -63,7 +86,7 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
             return;
         }
 
-        if (instance.varSet.size() > 0) {
+        if (instance.varList.size() > 0) {
             // Select a variable and value to assign.
             int var = selectVar();
             int val = selectVal(var);
@@ -117,7 +140,7 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
 
     private List<Arc> getFutureArcs(int currentVar) {
         List<Arc> arcs = new ArrayList<Arc>();
-        for (int futureVar : instance.varSet) {
+        for (int futureVar : instance.varList) {
             if (futureVar != currentVar) {
                 arcs.add(new Arc(futureVar, currentVar));
             }
