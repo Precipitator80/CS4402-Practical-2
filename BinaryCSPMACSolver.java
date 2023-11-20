@@ -1,5 +1,6 @@
 import java.time.Duration;
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class BinaryCSPMACSolver extends BinaryCSPSolver {
@@ -162,5 +163,24 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
             }
         }
         return changed;
+    }
+
+    /**
+     * Gets all the arcs targeting a given variable / node.
+     * @param arc An arc containing the target variable as well as another variable to ignore.
+     * @return A queue of arcs targeting the given variable.
+     */
+    protected Queue<Arc> getTargetedArcs(Arc arc) {
+        Queue<Arc> queue = new LinkedList<Arc>();
+        for (BinaryConstraint constraint : instance.constraints) {
+            if (constraint.containsVar(arc.getVal1())) {
+                int otherVar = (constraint.getFirstVar() == arc.getVal1()) ? constraint.getSecondVar()
+                        : constraint.getFirstVar();
+                if (otherVar != arc.getVal2()) {
+                    queue.add(new Arc(otherVar, arc.getVal1()));
+                }
+            }
+        }
+        return queue;
     }
 }
