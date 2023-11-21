@@ -316,18 +316,6 @@ public abstract class BinaryCSPSolver {
   }
 
   /**
-  * Gets all the arcs of the instance's graph of variables (nodes) and constraints (edges).
-  * @return A queue of all arcs in the instance's graph.
-  */
-  protected Queue<Arc> getArcs() {
-    Queue<Arc> queue = new LinkedList<Arc>();
-    for (BinaryConstraint constraint : instance.constraints) {
-      createArcs(constraint, queue);
-    }
-    return queue;
-  }
-
-  /**
    * Gets all the arcs around a single variable (node) in the instance's graph.
    * @param var The variable to get connected arcs of.
    * @return All arcs around the variable.

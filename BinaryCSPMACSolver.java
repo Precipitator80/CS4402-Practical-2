@@ -166,6 +166,18 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
     }
 
     /**
+    * Gets all the arcs of the instance's graph of variables (nodes) and constraints (edges).
+    * @return A queue of all arcs in the instance's graph.
+    */
+    protected Queue<Arc> getArcs() {
+        Queue<Arc> queue = new LinkedList<Arc>();
+        for (BinaryConstraint constraint : instance.constraints) {
+            createArcs(constraint, queue);
+        }
+        return queue;
+    }
+
+    /**
      * Gets all the arcs targeting a given variable / node.
      * @param arc An arc containing the target variable as well as another variable to ignore.
      * @return A queue of arcs targeting the given variable.
