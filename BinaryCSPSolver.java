@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 public abstract class BinaryCSPSolver {
@@ -17,6 +19,53 @@ public abstract class BinaryCSPSolver {
     this.stateChanges = new Stack<BinaryCSPStateChange>();
   }
 
+  /**
+   * Main method to run one of the specialised solvers.
+   * @param args file.csp [solverType] [solutionsToFind] [varSelectMode] [valSelectMode] [debugMode]
+   */
+  public static void main(String[] args) {
+    try {
+      if (args.length > 0) {
+        String instanceFilePath = args[0];
+        String solverType = "";
+        int solutionsToFind = 0;
+        int varSelectMode = 0;
+        int valSelectMode = 0;
+        boolean debugMode = false;
+        if (args.length > 1) {
+          solverType = args[1];
+          if (args.length > 2) {
+            solutionsToFind = Integer.parseInt(args[1]);
+            if (args.length > 3) {
+              varSelectMode = Integer.parseInt(args[2]);
+              if (args.length > 4) {
+                valSelectMode = Integer.parseInt(args[3]);
+                if (args.length > 5) {
+                  debugMode = Boolean.parseBoolean(args[4]);
+                }
+              }
+            }
+          }
+        }
+
+        switch (solverType) {
+          case "FC":
+            new BinaryCSPFCSolver(instanceFilePath, solutionsToFind, varSelectMode, valSelectMode, debugMode).solve();
+            break;
+          default:
+            System.out.println("Did not pass in valid solver type (FC / MAC). Defaulting to MAC.");
+          case "MAC":
+          case "":
+            new BinaryCSPMACSolver(instanceFilePath, solutionsToFind, varSelectMode, valSelectMode, debugMode).solve();
+            break;
+        }
+      }
+    } catch (Exception e) {
+      System.out.println(
+          "Usage: java BinaryCSPSolver <file.csp> [solverType] [solutionsToFind] [varSelectMode] [valSelectMode] [debugMode]");
+    }
+  }
+
   enum VarSelectMode {
     ASCENDING,
     SMALLEST_DOMAIN
@@ -26,11 +75,6 @@ public abstract class BinaryCSPSolver {
     ASCENDING,
     MIN_CONFLICTS
   }
-
-  /**
-   * Method that will solve the CSP.
-   */
-  abstract void solve();
 
   // The instance to solve.
   BinaryCSP instance;
@@ -54,6 +98,104 @@ public abstract class BinaryCSPSolver {
   // Each state has a list of variable domains.
   // Each domain is a set of integers.
   Stack<BinaryCSPStateChange> stateChanges;
+
+  /**
+   * Algorithm to enforce local arc consistency.
+   * @param var The var to enforce local arc consistency around.
+   * @param changed Whether the preceding assignment / unassignment changed var's domain.
+   * @throws EmptyDomainException If the domain of any variables were wiped out during revision.
+   */
+  abstract void enforceLocalConsistency(int var, boolean changed) throws EmptyDomainException;
+
+  /**
+   * Method for solver types that require special setup at the start.
+   * For example, MAC must enforce global arc consistency before solving.
+   * FC does not require any special setup.
+   * @return Whether the solver prepared successfully.
+   */
+  abstract boolean prepareSolver();
+
+  /**
+   * Method that sets up and starts the solver.
+   * Also records solver information and prints it at the end.
+   */
+  protected void solve() {
+    // Create a starting state.
+    enterNewState(-1);
+    Instant start = Instant.now();
+
+    boolean ready = prepareSolver();
+
+    if (ready) {
+      recursiveStep(); // Start the first recursive step of solving.
+
+      // Print solver information after finishing.
+      Instant finish = Instant.now();
+      long timeElapsed = Duration.between(start, finish).toMillis();
+      printInfo();
+      System.out.println("Time taken: " + timeElapsed + "ms");
+    } else {
+      System.err.println("Failed to prepare solver!");
+    }
+  }
+
+  /**
+   * Solves the CSP through recursive steps.
+   * @return Whether to stop searching. Used to propagate exit condition in case of finding limited solutions.
+   */
+  private boolean recursiveStep() {
+    if (completeAssignments()) {
+      showSolution(); // After finding a solution, continue searching for further solutions.
+      return solutionsToFind > 0 && solutionsFound >= solutionsToFind;
+    }
+
+    // LEFT BRANCH: Make a guess.
+    // Select a variable and value to assign.
+    int var = selectVar();
+    int val = selectVal(var);
+
+    // Assign the variable, removing all other values from its domain.
+    boolean changed = assign(var, val);
+
+    // TODO Have geelen selectValAndAssign method.
+
+    try {
+      // If any values were removed, propagate the changes.
+      enforceLocalConsistency(var, changed);
+
+      // If no domains were wiped out by the changes, run the algorithm again to choose further variables.
+      boolean stopSearch = recursiveStep();
+      if (stopSearch) {
+        return true;
+      }
+    } catch (EmptyDomainException e) {
+      // Exception to let AC3 cancel early in the case of a domain wipeout.
+      if (DEBUG_MODE) {
+        System.out.println(e.toString() + " (1)");
+      }
+    }
+
+    // RIGHT BRANCH: If the guess failed, guess the opposite.
+    try {
+      unassign(var, val);
+      enforceLocalConsistency(var, true); // Unassign will always change the variable's domain if not wiping it out.
+      boolean stopSearch = recursiveStep();
+      if (stopSearch) {
+        return true;
+      }
+    } catch (EmptyDomainException e) {
+      // Exception to let AC3 cancel early in the case of a domain wipeout.
+      if (DEBUG_MODE) {
+        System.out.println(e.toString() + " (2)");
+      }
+    }
+
+    //System.out.println("Finished exploring tree (1).");
+    //System.out.println("Finished exploring tree (2).");
+    restoreDomain(var, val);
+
+    return false;
+  }
 
   /**
    * Get the current state change.
@@ -124,6 +266,7 @@ public abstract class BinaryCSPSolver {
    * This means that the variable is set to not equal this specific value (right branch).
    * @param var The variable to remove the value from.
    * @param val The value to remove.
+   * @throws EmptyDomainException If domain pruning resulted in a wipeout.
    */
   protected void unassign(int var, int val) throws EmptyDomainException {
     revertState();
@@ -139,6 +282,7 @@ public abstract class BinaryCSPSolver {
    * @param var The variable to remove the value from.
    * @param val The value to remove.
    * @return Whether the value was removed / pruned successfully.
+   * @throws EmptyDomainException If domain pruning resulted in a wipeout.
    */
   private void pruneDomain(int var, int val) throws EmptyDomainException {
     instance.domains.get(var).remove(val);
@@ -250,7 +394,6 @@ public abstract class BinaryCSPSolver {
 
   /**
    * Selects a value in the domain of a given variable.
-   * Throws an exception if the domain is empty.
    * @param var The variable with the domain to get a value from.
    * @return The first value in the domain of the variable.
    */
@@ -265,7 +408,7 @@ public abstract class BinaryCSPSolver {
 
   /**
    * Select the first value in the domain of a given variable.
-   * Throws an exception if the domain is empty.
+   * Throws an undeclared exception if the domain is empty. Should not happen in practice.
    * @param var The variable with the domain to get a value from.
    * @return The first value in the domain of the variable.
    */
@@ -274,6 +417,12 @@ public abstract class BinaryCSPSolver {
   }
 
   /** TODO If using a Geelen promise / heuristic / etc, do value choosing and assigning in one step to avoid searching for lost constraints twice. */
+  /**
+   * Selects the value with the minimum conflicts in the domain of a given variable.
+   * This is the value that removes the fewest values from the domains of variables left to assign.
+   * @param var The variable with the domain to get a value from.
+   * @return The value with the minimum conflicts.
+   */
   private GeelenPair selectValMinConflicts(int var) {
     GeelenPair minGeelenPair = null;
     int minLost = Integer.MAX_VALUE;
@@ -286,6 +435,11 @@ public abstract class BinaryCSPSolver {
     return minGeelenPair;
   }
 
+  /**
+   * Gets the geelen pairs for a specific variable.
+   * @param var The variable to get the pairs for.
+   * @return A set of Geelen pairs for each value of var's domain.
+   */
   private Set<GeelenPair> getGeelenPairs(int var) {
     Set<GeelenPair> geelenPairs = new LinkedHashSet<GeelenPair>();
     Iterator<Integer> domainIterator = instance.domains.get(var).iterator();
@@ -302,17 +456,6 @@ public abstract class BinaryCSPSolver {
    */
   protected boolean completeAssignments() {
     return instance.varList.isEmpty();
-    /*
-    boolean completedAssignments = true;
-    for (int var = 0; var < instance.domains.size() && completedAssignments; var++) {
-      completedAssignments = instance.domains.get(var).size() == 1;
-    }
-    return completedAssignments;
-    */
-  }
-
-  protected boolean stopSearching() {
-    return solutionsToFind > 0 && solutionsFound >= solutionsToFind;
   }
 
   /**
@@ -335,7 +478,7 @@ public abstract class BinaryCSPSolver {
    * @param constraint The constraint to create arcs for.
    * @param queue The queue to add the arcs to.
    */
-  private void createArcs(BinaryConstraint constraint, Queue<Arc> queue) {
+  protected void createArcs(BinaryConstraint constraint, Queue<Arc> queue) {
     queue.add(new Arc(constraint.getFirstVar(), constraint.getSecondVar()));
     queue.add(new Arc(constraint.getSecondVar(), constraint.getFirstVar()));
   }
@@ -343,7 +486,8 @@ public abstract class BinaryCSPSolver {
   /**
    * An arc revision that removes any domain values not supporting it.
    * @param arc The arc to revise.
-   * @return whether the domain of the arc's primary / first variable was changed without any domain wipeout.
+   * @return Whether the domain of the arc's primary / first variable was changed without any domain wipeout.
+   * @throws EmptyDomainException If an arc revision resulted in a domain wipeout.
    */
   protected boolean revise(Arc arc) throws EmptyDomainException {
     // Boolean value to track whether the domain was changed.
@@ -389,7 +533,7 @@ public abstract class BinaryCSPSolver {
   }
 
   /**
-   * Print the solution and increment the solutions counter.
+   * Prints the solution and increment the solutions counter.
    */
   protected void showSolution() {
     StringBuilder stringBuilder = new StringBuilder("Found solution!\n");
@@ -401,6 +545,9 @@ public abstract class BinaryCSPSolver {
     solutionsFound++;
   }
 
+  /**
+   * Prints solver information.
+   */
   protected void printInfo() {
     if (solutionsFound == 0) {
       System.out.println("Failed to find a solution!");

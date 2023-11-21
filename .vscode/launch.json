@@ -2,6 +2,8 @@
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // Home PC: "projectName": "CS4402-Practical-2_369e2e86"
+    // School PC: "projectName": "Practical 2_310c49b2"
     "version": "0.2.0",
     "configurations": [
         {
@@ -15,54 +17,54 @@
             "name": "BinaryCSPReader",
             "request": "launch",
             "mainClass": "BinaryCSPReader",
-            "projectName": "Practical 2_310c49b2"
+            "projectName": "CS4402-Practical-2_369e2e86"
         },
         {
             "type": "java",
             "name": "BinaryCSPFCSolver 4Queens",
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
-            "projectName": "Practical 2_310c49b2",
-            "args": "instances/4Queens.csp"
+            "projectName": "CS4402-Practical-2_369e2e86",
+            "args": "instances/4Queens.csp FC"
         },
         {
             "type": "java",
             "name": "BinaryCSPFCSolver 5Queens",
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
-            "projectName": "Practical 2_310c49b2",
-            "args": "instances/5Queens.csp"
+            "projectName": "CS4402-Practical-2_369e2e86",
+            "args": "instances/5Queens.csp FC"
         },
         {
             "type": "java",
             "name": "BinaryCSPFCSolver 6Queens",
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
-            "projectName": "Practical 2_310c49b2",
-            "args": "instances/6Queens.csp"
+            "projectName": "CS4402-Practical-2_369e2e86",
+            "args": "instances/6Queens.csp FC"
         },
         {
             "type": "java",
             "name": "BinaryCSPFCSolver 8Queens",
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
-            "projectName": "Practical 2_310c49b2",
-            "args": "instances/8Queens.csp"
+            "projectName": "CS4402-Practical-2_369e2e86",
+            "args": "instances/8Queens.csp FC"
         },
         {
             "type": "java",
             "name": "BinaryCSPFCSolver 10Queens",
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
-            "projectName": "Practical 2_310c49b2",
-            "args": "instances/10Queens.csp"
+            "projectName": "CS4402-Practical-2_369e2e86",
+            "args": "instances/10Queens.csp FC"
         },
         {
             "type": "java",
             "name": "BinaryCSPMACSolver 4Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/4Queens.csp"
         },
         {
@@ -70,7 +72,7 @@
             "name": "BinaryCSPMACSolver 5Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/5Queens.csp"
         },
         {
@@ -78,7 +80,7 @@
             "name": "BinaryCSPMACSolver 6Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/6Queens.csp"
         },
         {
@@ -86,7 +88,7 @@
             "name": "BinaryCSPMACSolver 8Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/8Queens.csp"
         },
         {
@@ -94,7 +96,7 @@
             "name": "BinaryCSPMACSolver 10Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/10Queens.csp"
         },
         {
@@ -102,7 +104,7 @@
             "name": "BinaryCSPMACSolver 11Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/11Queens.csp"
         },
         {
@@ -110,7 +112,7 @@
             "name": "BinaryCSPMACSolver 12Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/12Queens.csp"
         },
         {
@@ -118,7 +120,7 @@
             "name": "BinaryCSPMACSolver 13Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/13Queens.csp"
         },
         {
@@ -126,7 +128,7 @@
             "name": "BinaryCSPMACSolver 14Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/14Queens.csp"
         },
         {
@@ -134,7 +136,7 @@
             "name": "BinaryCSPMACSolver 15Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/15Queens.csp"
         },
         {
@@ -142,7 +144,7 @@
             "name": "BinaryCSPMACSolver 16Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/16Queens.csp"
         },
         {
@@ -150,7 +152,7 @@
             "name": "BinaryCSPMACSolver 17Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/17Queens.csp"
         },
         {
@@ -158,7 +160,7 @@
             "name": "BinaryCSPMACSolver 18Queens",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/18Queens.csp"
         },
         {
@@ -166,7 +168,7 @@
             "name": "BinaryCSPMACSolver Sudoku",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "instances/FinnishSudoku.csp"
         },
         {
@@ -174,14 +176,14 @@
             "name": "LangfordsGenerator",
             "request": "launch",
             "mainClass": "LangfordsGenerator",
-            "projectName": "Practical 2_310c49b2"
+            "projectName": "CS4402-Practical-2_369e2e86"
         },
         {
             "type": "java",
             "name": "QueensGenerator",
             "request": "launch",
             "mainClass": "QueensGenerator",
-            "projectName": "Practical 2_310c49b2",
+            "projectName": "CS4402-Practical-2_369e2e86",
             "args": "18"
         },
         {
@@ -189,7 +191,7 @@
             "name": "SudokuGenerator",
             "request": "launch",
             "mainClass": "SudokuGenerator",
-            "projectName": "Practical 2_310c49b2"
+            "projectName": "CS4402-Practical-2_369e2e86"
         }
     ]
 }

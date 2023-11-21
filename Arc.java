@@ -10,15 +10,5 @@ public final class Arc extends BinaryTuple {
     reversed = var2 < var1;
   }
 
-  // @Override
-  // public int getVal1() {
-  //   return !reversed ? super.getVal1() : super.getVal2();
-  // }
-
-  // @Override
-  // public int getVal2() {
-  //   return !reversed ? super.getVal2() : super.getVal1();
-  // }
-
   public boolean reversed;
 }
