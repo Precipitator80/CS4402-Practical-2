@@ -12,6 +12,11 @@ public class BinaryCSPFCSolver extends BinaryCSPSolver {
         super(instance, solutionsToFind, varSelectMode, valSelectMode, debugMode);
     }
 
+    public BinaryCSPFCSolver(BinaryCSP instance, int solutionsToFind, BinaryCSPSolver.VarSelectMode varSelectMode,
+            BinaryCSPSolver.ValSelectMode valSelectMode, boolean debugMode) {
+        super(instance, solutionsToFind, varSelectMode, valSelectMode, debugMode);
+    }
+
     /**
      * Forward checking must always check consistency, even when a domain only had one value left.
      * This is because for each variable, only future arcs to that variable are checked.

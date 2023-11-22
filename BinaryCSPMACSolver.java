@@ -12,6 +12,11 @@ public class BinaryCSPMACSolver extends BinaryCSPSolver {
         super(instance, solutionsToFind, varSelectMode, valSelectMode, debugMode);
     }
 
+    public BinaryCSPMACSolver(BinaryCSP instance, int solutionsToFind, BinaryCSPSolver.VarSelectMode varSelectMode,
+            BinaryCSPSolver.ValSelectMode valSelectMode, boolean debugMode) {
+        super(instance, solutionsToFind, varSelectMode, valSelectMode, debugMode);
+    }
+
     @Override
     void enforceLocalConsistency(int var, boolean changed) throws EmptyDomainException {
         if (changed) {

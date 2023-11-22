@@ -11,10 +11,17 @@ public abstract class BinaryCSPSolver {
 
   public BinaryCSPSolver(BinaryCSP instance, int solutionsToFind, int varSelectMode, int valSelectMode,
       boolean debugMode) {
+    this(instance, solutionsToFind, VarSelectMode.values()[varSelectMode], ValSelectMode.values()[valSelectMode],
+        debugMode);
+  }
+
+  public BinaryCSPSolver(BinaryCSP instance, int solutionsToFind, VarSelectMode varSelectMode,
+      ValSelectMode valSelectMode,
+      boolean debugMode) {
     this.instance = instance;
     this.solutionsToFind = solutionsToFind;
-    this.varSelectMode = VarSelectMode.values()[varSelectMode];
-    this.valSelectMode = ValSelectMode.values()[valSelectMode];
+    this.varSelectMode = varSelectMode;
+    this.valSelectMode = valSelectMode;
     this.DEBUG_MODE = debugMode;
     this.stateChanges = new Stack<BinaryCSPStateChange>();
   }
@@ -90,6 +97,7 @@ public abstract class BinaryCSPSolver {
   int solutionsFound = 0; // The number of solutions found.
   int nodesExplored = 0; // The number of nodes explored.
   int revisionsDone = 0; // The number of arc revisions done.
+  long timeTaken = 0l; // The time taken to finish.
 
   // Flag to print out solver logic.
   final boolean DEBUG_MODE;
@@ -131,9 +139,9 @@ public abstract class BinaryCSPSolver {
 
       // Print solver information after finishing.
       Instant finish = Instant.now();
-      long timeElapsed = Duration.between(start, finish).toMillis();
+      timeTaken = Duration.between(start, finish).toMillis();
       printInfo();
-      System.out.println("Time taken: " + timeElapsed + "ms");
+      System.out.println("Time taken: " + timeTaken + "ms");
     } else {
       System.err.println("Failed to prepare solver!");
     }
