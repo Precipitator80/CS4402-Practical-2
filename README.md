@@ -4,13 +4,13 @@ To compile, run the following:
 Makefile all
 ```
 
-After this, the Maintaining Arc Consistency and Forward Checking solvers can be run with the following commands:
+After this, the solvers can be run with the following command:
 ```
-java BinaryCSPMACSolver <file.csp> [solutionsToFind] [varSelectMode] [valSelectMode] [debugMode]
-java BinaryCSPFCSolver <file.csp> [solutionsToFind] [varSelectMode] [valSelectMode] [debugMode]
+java BinaryCSPSolver <file.csp> [solverType] [solutionsToFind] [varSelectMode] [valSelectMode] [debugMode]
 ```
 
 file.csp: The path to a problem instance to solve.  
+solverType: The solver type to use (MAC / FC).  
 solutionsToFind (Optional): The number of solutions to find before stopping. 0 will attempt to find all solutions.  
 varSelectMode (Optional): The mode to use when selecting a variable to assign (0 = Ascending, 1 = Min Domain).  
 valSelectMode (Optional): The mode to use when selecting a value to assign to a variable (0 = Ascending, 1 = Min Conflicts).  

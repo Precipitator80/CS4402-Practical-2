@@ -8,11 +8,131 @@
     "configurations": [
         {
             "type": "java",
-            "name": "SolverDataExporter",
+            "name": "SolverDataExporter n-queens Small",
             "request": "launch",
             "mainClass": "SolverDataExporter",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/n-queens/small"
+            "args": "instances/n-queens/small n-queens_small"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter n-queens Small All Solutions",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/n-queens/small n-queens_small_all_solutions 0"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter n-queens Medium",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/n-queens/medium n-queens_medium"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter n-queens Medium All Solutions",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/n-queens/medium n-queens_medium_all_solutions 0"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter n-queens Large",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/n-queens/large n-queens_large"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter n-queens All",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/n-queens n-queens_all"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Langfords Small",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/langfords/small langfords_small"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Langfords Small All Solutions",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/langfords/small langfords_small_all_solutions 0"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Langfords Medium",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/langfords/medium langfords_medium"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Langfords Large",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/langfords/large langfords_large"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Langfords All",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/langfords langfords_all"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Sudoku Small",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/sudoku/small sudoku_small"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Sudoku Medium",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/sudoku/medium sudoku_medium"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Sudoku Large",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/sudoku/large sudoku_large"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter Sudoku All",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/sudoku sudoku_all"
+        },
+        {
+            "type": "java",
+            "name": "SolverDataExporter All Instances",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances all_instances"
         },
         {
             "type": "java",
