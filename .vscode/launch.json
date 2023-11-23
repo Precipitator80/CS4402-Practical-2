@@ -88,6 +88,14 @@
         },
         {
             "type": "java",
+            "name": "SolverDataExporter Langfords Large All Solutions",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/langfords/large langfords_large_all_solutions 0"
+        },
+        {
+            "type": "java",
             "name": "SolverDataExporter Langfords All",
             "request": "launch",
             "mainClass": "SolverDataExporter",
@@ -136,6 +144,14 @@
         },
         {
             "type": "java",
+            "name": "SolverDataExporter All Instances All Solutions",
+            "request": "launch",
+            "mainClass": "SolverDataExporter",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances all_instances_all_solutions 0"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -153,7 +169,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/4Queens.csp FC"
+            "args": "instances/n-queens/small/4Queens.csp FC"
         },
         {
             "type": "java",
@@ -161,7 +177,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/5Queens.csp FC"
+            "args": "instances/n-queens/small/5Queens.csp FC"
         },
         {
             "type": "java",
@@ -169,7 +185,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/6Queens.csp FC"
+            "args": "instances/n-queens/small/6Queens.csp FC"
         },
         {
             "type": "java",
@@ -177,7 +193,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/8Queens.csp FC"
+            "args": "instances/n-queens/small/8Queens.csp FC"
         },
         {
             "type": "java",
@@ -185,7 +201,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPFCSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/10Queens.csp FC"
+            "args": "instances/n-queens/small/10Queens.csp FC"
         },
         {
             "type": "java",
@@ -193,7 +209,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/4Queens.csp"
+            "args": "instances/n-queens/small/4Queens.csp"
         },
         {
             "type": "java",
@@ -201,7 +217,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/5Queens.csp"
+            "args": "instances/n-queens/small/5Queens.csp"
         },
         {
             "type": "java",
@@ -209,7 +225,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/6Queens.csp"
+            "args": "instances/n-queens/small/6Queens.csp"
         },
         {
             "type": "java",
@@ -217,7 +233,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/8Queens.csp"
+            "args": "instances/n-queens/small/8Queens.csp"
         },
         {
             "type": "java",
@@ -225,7 +241,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/10Queens.csp"
+            "args": "instances/n-queens/small/10Queens.csp"
         },
         {
             "type": "java",
@@ -233,7 +249,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/11Queens.csp"
+            "args": "instances/n-queens/medium/11Queens.csp"
         },
         {
             "type": "java",
@@ -241,7 +257,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/12Queens.csp"
+            "args": "instances/n-queens/medium/12Queens.csp"
         },
         {
             "type": "java",
@@ -249,7 +265,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/13Queens.csp"
+            "args": "instances/n-queens/medium/13Queens.csp"
         },
         {
             "type": "java",
@@ -257,7 +273,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/14Queens.csp"
+            "args": "instances/n-queens/large/14Queens.csp"
         },
         {
             "type": "java",
@@ -265,7 +281,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/15Queens.csp"
+            "args": "instances/n-queens/large/15Queens.csp"
         },
         {
             "type": "java",
@@ -273,7 +289,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/16Queens.csp"
+            "args": "instances/n-queens/large/16Queens.csp"
         },
         {
             "type": "java",
@@ -281,7 +297,7 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/17Queens.csp"
+            "args": "instances/n-queens/large/17Queens.csp"
         },
         {
             "type": "java",
@@ -289,15 +305,23 @@
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/18Queens.csp"
+            "args": "instances/n-queens/large/18Queens.csp"
         },
         {
             "type": "java",
-            "name": "BinaryCSPMACSolver Sudoku",
+            "name": "BinaryCSPMACSolver SimonisSudoku",
             "request": "launch",
             "mainClass": "BinaryCSPMACSolver",
             "projectName": "Practical 2_310c49b2",
-            "args": "instances/FinnishSudoku.csp"
+            "args": "instances/sudoku/small/SimonisSudoku.csp"
+        },
+        {
+            "type": "java",
+            "name": "BinaryCSPMACSolver FinnishSudoku",
+            "request": "launch",
+            "mainClass": "BinaryCSPMACSolver",
+            "projectName": "Practical 2_310c49b2",
+            "args": "instances/sudoku/large/FinnishSudoku.csp"
         },
         {
             "type": "java",

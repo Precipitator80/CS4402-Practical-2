@@ -42,13 +42,13 @@ public abstract class BinaryCSPSolver {
         if (args.length > 1) {
           solverType = args[1];
           if (args.length > 2) {
-            solutionsToFind = Integer.parseInt(args[1]);
+            solutionsToFind = Integer.parseInt(args[2]);
             if (args.length > 3) {
-              varSelectMode = Integer.parseInt(args[2]);
+              varSelectMode = Integer.parseInt(args[3]);
               if (args.length > 4) {
-                valSelectMode = Integer.parseInt(args[3]);
+                valSelectMode = Integer.parseInt(args[4]);
                 if (args.length > 5) {
-                  debugMode = Boolean.parseBoolean(args[4]);
+                  debugMode = Boolean.parseBoolean(args[5]);
                 }
               }
             }
@@ -164,8 +164,6 @@ public abstract class BinaryCSPSolver {
 
     // Assign the variable, removing all other values from its domain.
     boolean changed = assign(var, val);
-
-    // TODO Have geelen selectValAndAssign method.
 
     try {
       // If any values were removed, propagate the changes.
@@ -424,7 +422,7 @@ public abstract class BinaryCSPSolver {
     return instance.domains.get(var).iterator().next();
   }
 
-  /** TODO If using a Geelen promise / heuristic / etc, do value choosing and assigning in one step to avoid searching for lost constraints twice. */
+  /** If using a Geelen promise / heuristic / etc, could do value choosing and assigning in one step to avoid searching for lost constraints twice. */
   /**
    * Selects the value with the minimum conflicts in the domain of a given variable.
    * This is the value that removes the fewest values from the domains of variables left to assign.
