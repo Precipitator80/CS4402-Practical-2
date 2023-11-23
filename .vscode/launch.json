@@ -328,7 +328,8 @@
             "name": "LangfordsGenerator",
             "request": "launch",
             "mainClass": "LangfordsGenerator",
-            "projectName": "Practical 2_310c49b2"
+            "projectName": "Practical 2_310c49b2",
+            "args": "4 16"
         },
         {
             "type": "java",
