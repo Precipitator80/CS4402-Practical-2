@@ -4,6 +4,9 @@ import java.io.IOException;
 
 public final class LangfordsGenerator {
   // for k = 2, n must be 4m or 4m-1.
+  // k = Number of times to have full range of numbers.
+  // n = Domain range of numbers.
+  // Langford's Sequences -  - http://datagenetics.com/blog/october32014/index.html - Accessed 23.11.2023
   public static void main(String[] args) {
     if (args.length != 2) {
       System.out.println("Usage: java LangfordsGenerator <k> <n>");
