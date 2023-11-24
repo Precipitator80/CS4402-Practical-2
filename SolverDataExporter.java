@@ -57,6 +57,8 @@ public class SolverDataExporter {
             ExecutorService es = Executors.newCachedThreadPool();
             for (String solverType : new String[] { "MAC", "FC" }) {
                 for (BinaryCSPFCSolver.VarSelectMode varSelectMode : BinaryCSPSolver.VarSelectMode.values()) {
+                    // Switch with this when running medium Sudoku.
+                    // BinaryCSPFCSolver.VarSelectMode varSelectMode = BinaryCSPFCSolver.VarSelectMode.SMALLEST_DOMAIN;
                     for (BinaryCSPFCSolver.ValSelectMode valSelectMode : BinaryCSPSolver.ValSelectMode.values()) {
                         for (Path instanceFilePath : files) {
                             Runnable runnable = createConfigRunnable(solutionsToFind, solverType, varSelectMode,
