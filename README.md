@@ -1,4 +1,9 @@
-# CS4402-Practical-2
+# CS4402-Practical-2: Binary CSP Solvers
+
+The specification detailed the creation of two binary constraint satisfaction problem solvers, one using Forward Checking (FC) and the other Maintaining Arc Consistency (MAC). Both solvers employ 2-way branching and were augmented with two variable and value ordering strategies to choose from. The performance of the solvers and selection strategies were evaluated against instances of Langford's problem, the n-queens problem and Sudoku. Finally, it is observed how solver performances varies among different instances of the three problems.
+
+[See the project report here.](190018469-CS4402-Practical-2.pdf)
+
 To compile, run the following:
 ```bash
 Makefile all
